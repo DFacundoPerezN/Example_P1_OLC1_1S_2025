@@ -1,0 +1,39 @@
+/* 1. Package e importaciones */
+package Analizadores; 
+import java_cup.runtime.*;
+
+// 2. Codigo para el parser, variables, metodos 
+parser code 
+{:
+    //Clases, objetos, variables, lista, etc... en sintaxis java    
+    ;
+:} 
+
+// 3. Terminales 
+terminal String AND,OR,NOT;
+
+terminal String BOOLEANO;
+
+// 4. No Terminales
+non terminal ini, entradas;
+non terminal if;
+non terminal exp;
+
+// 5. Precedencias
+precedence left AND,OR;
+precedence right NOT; 
+
+// 6. Producciones
+start with ini; 
+ini ::= entradas
+;
+
+entradas ::= exp;
+
+//todavia no es recursivo
+exp ::= exp AND exp {: :}
+        | exp OR exp {: System.out.println("OR detected");:}
+        | NOT exp        
+        | BOOLEANO  {: System.out.println("Sintactico reconocio BOOL"); :}
+
+;
