@@ -2,13 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Generador;
+package Generadores;
 import java.io.File;
 /**
  *
  * @author Faxx
  */
-public class G_Scanner {
+public class Generator_Scanner {
     public static void main(String[] args) 
     {
         String path="src/Analizadores/Scanner.jflex";

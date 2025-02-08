@@ -2,13 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Generador;
+package Generadores;
 
 /**
  *
  * @author Faxx
  */
-public class G_Parser {
+public class Generator_Parser {
     
     public static void main(String[] args)
     {
