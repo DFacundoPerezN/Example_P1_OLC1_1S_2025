@@ -20,7 +20,7 @@ public class EjemploP1_OLC1 {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        String texto = "true AND false || false";
+        String texto = "if true AND false || ! false then D , if false then C";
         Analizadores.Scanner lexico  = new Analizadores.Scanner(new BufferedReader( new StringReader(texto)));
         Parser sintactico =new Parser(lexico);
         

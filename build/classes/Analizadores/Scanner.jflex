@@ -28,7 +28,7 @@ import java_cup.runtime.*;
 %full
 %line
 %unicode
-%ignorecase
+//%ignorecase
 //%debug
 
 //Inicializar el contador de yychar y fila con 1
@@ -42,11 +42,19 @@ BOOL = "true"| "false"
 NUM = [0-9]+
 DEC = [0-9]+"."[0-9]+
 BLANCOS=[ \r\t]+
+ID = [A-Za-z][A-Za-z0-9_]*
+ACC = "D" | "C"
 
 //Palabras reservadas
 %%
 "AND" {    
     return new Symbol(sym.AND,yyline,yychar,yytext());
+}
+"if" {    
+    return new Symbol(sym.PR_IF,yyline,yychar,yytext());
+} 
+"then" {    
+    return new Symbol(sym.PR_THEN,yyline,yychar,yytext());
 }
 
 //Simbolos
@@ -56,11 +64,23 @@ BLANCOS=[ \r\t]+
 "||" {
     return new Symbol(sym.OR,yyline,yychar,yytext());
 } 
+"!" {
+    return new Symbol(sym.NOT,yyline,yychar,yytext());
+} 
+//Signos de puntuacion 
+"," {
+    return new Symbol(sym.COMA,yyline,yychar,yytext());
+} 
+
 
 {BLANCOS} {}
-{BOOL} {System.out.println("Reconocio BOOL: "+yytext());  
+{BOOL} {//System.out.println("Reconocio BOOL: "+yytext());  
     //lexemas.add( new Lexema(yytext(),"Boolean",yyline,yychar));
     return new Symbol(sym.BOOLEANO,yyline,yychar, yytext());
+} 
+{ACC} {
+    //lexemas.add( new Lexema(yytext(),"Boolean",yyline,yychar));
+    return new Symbol(sym.ACCION,yyline,yychar, yytext());
 } 
 
 //errores
