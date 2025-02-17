@@ -1,6 +1,11 @@
 /* 1. Package e importaciones */
 package Analizadores; 
 import java_cup.runtime.*;
+import Estructuras.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 // 2. Codigo para el parser, variables, metodos 
 parser code 
@@ -12,17 +17,25 @@ parser code
 // 3. Terminales 
 terminal String AND,OR,NOT;
 terminal String PR_IF, PR_THEN;
-terminal String COMA;
-terminal String BOOLEANO;
+terminal PR_ELSE, PR_RULES, PR_INITIAL, PR_STRATEGY;
+terminal String COMA, DOS_PUNTOS;
+terminal LLAV_IZQ, LLAV_DER;
+terminal COR_IZQ, COR_DER;
+terminal String BOOLEANO, ENTERO;
 terminal String ACCION;
+terminal EQUAL;
+terminal String ID;
 
 // 4. No Terminales
 non terminal ini, entradas;
+non terminal exp, exp_rel;
 non terminal if, list_if;
-non terminal String exp;
+non terminal else;
+non terminal rules, strat, definir_strat;
 
 // 5. Precedencias
 precedence left AND,OR;
+precedence left EQUAL;
 precedence right NOT; 
 precedence left COMA;
 
@@ -32,40 +45,60 @@ start with ini;
 ini ::= entradas
 ;
 
-entradas ::= list_if
+entradas ::= definir_strat
+            |list_if
 ;
 
 //todavia no es recursivo
 exp ::= exp:e1 AND exp:e2 {: System.out.println(e1 + " AND " + e2);
-                           if (e1.equals("true") && e2.equals("true")){
-                                RESULT = "true";
-                            } else{
-                                 RESULT = "false";
-                                }:}
+                          Node and = new  Node("=="); 
+                        and.hijoIzq = (Node) e1; and.hijoDer = (Node) e2; 
+                        RESULT = and;:}
 
         | exp:e1 OR exp:e2 {: System.out.println(e1 + " OR " + e2);
-                            if (e1.equals("true") || e2.equals("true")){
-                                RESULT = "true";
-                            } else{
-                                 RESULT = "false";
-                                }:}
+                            Node or = new  Node("||"); 
+                        or.hijoIzq = (Node) e1; or.hijoDer = (Node) e2; 
+                        RESULT = or;:}
 
-        | NOT exp:e1        {:  System.out.println(" NOT " + e1);
-                            if (e1.equals("false") ){
-                                RESULT = "true";
-                                } else{
-                                 RESULT = "false";
-                                }:}
+        | NOT exp:exp
+                    {: Node not = new  Node("!"); 
+                    not.hijoDer = (Node) exp; 
+                        RESULT = not; :}
+        | exp_rel:exp {: RESULT = exp; :} 
+;
 
+exp_rel ::= exp_rel:exp1 EQUAL exp_rel:exp2 
+                    {: Node equal = new  Node("=="); 
+                        equal.hijoIzq = (Node) exp1; equal.hijoDer = (Node) exp2; 
+                        RESULT = equal;:}
         | BOOLEANO:bool  {: System.out.println("Sintactico reconocio BOOL: "+ bool);
-                            RESULT = bool; :}
+                            RESULT = new Node( (String) bool); :}
+        | ENTERO:i {: RESULT = new Node( (String) i); :}
+        | ACCION:a {: RESULT = new Node( (String) a); :}
 ;
-
 //gramatica del if
-if ::= PR_IF exp:e1 PR_THEN ACCION  {: System.out.println(" resultado " + e1); :}
-    //| PR_ELSE ACCION
+if ::= PR_IF exp:e1 PR_THEN ACCION:a  {: System.out.println(" resultado " + e1);
+                        RESULT= new Regla_If((Node) e1, (String) a); :}
+
 ;
 
-list_if ::= list_if COMA list_if  
-        | if
+list_if ::= list_if:list COMA if:i   {: List<Regla_If> lista =(ArrayList<Regla_If>) list; 
+                                     lista.add((Regla_If)i); RESULT = lista; :}
+        | if:i {: List<Regla_If> lista = new ArrayList<Regla_If>(); 
+                lista.add((Regla_If)i); RESULT = lista; :}
 ;
+
+else ::= PR_ELSE ACCION:a {: RESULT= a; :}
+;
+
+rules ::= PR_RULES DOS_PUNTOS COR_IZQ list_if:list COMA {:  :}
+        | PR_RULES DOS_PUNTOS COR_IZQ  {: :}
+;
+
+strat ::= LLAV_IZQ PR_INITIAL DOS_PUNTOS ACCION:a1 
+            rules:lista  else:a2 COR_DER 
+            {: RESULT = new Estrategia( (String) a1, (ArrayList<Regla_If>) lista, (String) a2); :}
+;
+
+definir_strat ::= PR_STRATEGY ID:id strat LLAV_DER
+; 

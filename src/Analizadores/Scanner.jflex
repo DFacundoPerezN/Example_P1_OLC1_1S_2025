@@ -42,7 +42,7 @@ BOOL = "true"| "false"
 NUM = [0-9]+
 DEC = [0-9]+"."[0-9]+
 BLANCOS=[ \r\t]+
-ID = [A-Za-z][A-Za-z0-9_]*
+ID =  [a-zA-Z][a-zA-Z_0-9]*
 ACC = "D" | "C"
 
 //Palabras reservadas
@@ -56,8 +56,33 @@ ACC = "D" | "C"
 "then" {    
     return new Symbol(sym.PR_THEN,yyline,yychar,yytext());
 }
+"rules" {    
+    return new Symbol(sym.PR_RULES,yyline,yychar,yytext());
+}
+"else" {    
+    return new Symbol(sym.PR_ELSE,yyline,yychar,yytext());
+} 
+"initial" {    
+    return new Symbol(sym.PR_INITIAL,yyline,yychar,yytext());
+}
+"strategy" {    
+    return new Symbol(sym.PR_STRATEGY,yyline,yychar,yytext());
+}
 
 //Simbolos
+"[" {    
+    return new Symbol(sym.COR_IZQ,yyline,yychar,yytext());
+}
+"]" {    
+    return new Symbol(sym.COR_DER,yyline,yychar,yytext());
+} 
+"{" {    
+    return new Symbol(sym.LLAV_IZQ,yyline,yychar,yytext());
+} 
+"}" {    
+    return new Symbol(sym.LLAV_DER,yyline,yychar,yytext());
+} 
+//Operadores
 "&&" {    
     return new Symbol(sym.AND,yyline,yychar,yytext());
 }
@@ -67,11 +92,16 @@ ACC = "D" | "C"
 "!" {
     return new Symbol(sym.NOT,yyline,yychar,yytext());
 } 
+"==" {
+    return new Symbol(sym.EQUAL,yyline,yychar,yytext());
+} 
 //Signos de puntuacion 
 "," {
     return new Symbol(sym.COMA,yyline,yychar,yytext());
 } 
-
+":" {
+    return new Symbol(sym.DOS_PUNTOS,yyline,yychar,yytext());
+} 
 
 {BLANCOS} {}
 {BOOL} {//System.out.println("Reconocio BOOL: "+yytext());  
@@ -81,7 +111,16 @@ ACC = "D" | "C"
 {ACC} {
     //lexemas.add( new Lexema(yytext(),"Boolean",yyline,yychar));
     return new Symbol(sym.ACCION,yyline,yychar, yytext());
+}  
+{NUM} {
+    //lexemas.add( new Lexema(yytext(),"Boolean",yyline,yychar));
+    return new Symbol(sym.ENTERO,yyline,yychar, yytext());
 } 
+{ID} {
+    //lexemas.add( new Lexema(yytext(),"Boolean",yyline,yychar));
+    return new Symbol(sym.ID,yyline,yychar, yytext());
+} 
+
 
 //errores
 . {

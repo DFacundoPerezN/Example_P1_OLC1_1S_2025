@@ -20,8 +20,13 @@ public class EjemploP1_OLC1 {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        String texto = "if true AND false || ! false then D , if false then C";
-        Analizadores.Scanner lexico  = new Analizadores.Scanner(new BufferedReader( new StringReader(texto)));
+        String exp = "true || false AND 2 == 1 ";
+        String ifs = "if "+exp+" then D, if false then C";
+        String else_rule = "else C";
+        String rules = "rules : ["+ifs + "," + else_rule +"]";
+        String strat = "{ initial: D " + rules ;
+        String def_strat = "strategy strat" +strat+"}";
+        Analizadores.Scanner lexico  = new Analizadores.Scanner(new BufferedReader( new StringReader(def_strat)));
         Parser sintactico =new Parser(lexico);
         
         String consola;
