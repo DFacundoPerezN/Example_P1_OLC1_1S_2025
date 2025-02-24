@@ -26,7 +26,18 @@ public class EjemploP1_OLC1 {
         String rules = "rules : ["+ifs + "," + else_rule +"]";
         String strat = "{ initial: D " + rules ;
         String def_strat = "strategy strat" +strat+"}";
-        Analizadores.Scanner lexico  = new Analizadores.Scanner(new BufferedReader( new StringReader(def_strat)));
+        String scoring = "scoring: {";
+        String mc = "  mutual cooperation: 8\n" ;
+        String md = "mutual defection: 4\n" ;
+        String br = "betrayal reward: 4\n" ;
+        String bp = "betrayal punishment: 2";
+        String ps = "players strategies: [";
+        String rs = " rounds:";
+        String match = ps + "estrategia1 , estrategia2 ]"+ rs +"10" + scoring + 
+                mc +"," + md  +"," + br  +"," + bp  + "}";
+        String def_match = "match juego {"+match ; 
+        
+        Analizadores.Scanner lexico  = new Analizadores.Scanner(new BufferedReader( new StringReader(match)));
         Parser sintactico =new Parser(lexico);
         
         String consola;
@@ -34,7 +45,7 @@ public class EjemploP1_OLC1 {
             sintactico.parse();
         }catch (Exception ex) {
             //Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Error fatal en compilación de entrada.");
+            System.out.println("Error fatal en compilacion de entrada.");
             consola = "//Error sintactico no deja compilar el archivo";
         }
     }

@@ -10,7 +10,9 @@ import java.util.HashMap;
 // 2. Codigo para el parser, variables, metodos 
 parser code 
 {:
-    //Clases, objetos, variables, lista, etc... en sintaxis java    
+    //Clases, objetos, variables, lista, etc... en sintaxis java
+    Map<String, Estrategia> mapaEstrategias = new HashMap<>();
+    Map<String, Partida> mapaPartidas = new HashMap<>();
     ;
 :} 
 
@@ -25,6 +27,9 @@ terminal String BOOLEANO, ENTERO;
 terminal String ACCION;
 terminal EQUAL;
 terminal String ID;
+terminal PR_ROUNDS, PR_PLAYERS, PR_STRATEGIES;
+terminal PR_SCORING, PR_MUTUAL, PR_DEFECTION, PR_REWARD, PR_COOPERATION, PR_BETRAYAL, PR_PUNISHMENT;
+terminal PR_MATCH;
 
 // 4. No Terminales
 non terminal ini, entradas;
@@ -32,6 +37,9 @@ non terminal exp, exp_rel;
 non terminal if, list_if;
 non terminal else;
 non terminal rules, strat, definir_strat;
+non terminal Integer mutual_coop, mutual_defect, betrayal_rew, betrayal_punish;
+non terminal players_strategies, rounds, scoring;
+non terminal match, definir_match;
 
 // 5. Precedencias
 precedence left AND,OR;
@@ -45,8 +53,8 @@ start with ini;
 ini ::= entradas
 ;
 
-entradas ::= definir_strat
-            |list_if
+entradas ::= match
+        | definir_strat
 ;
 
 //todavia no es recursivo
@@ -100,5 +108,34 @@ strat ::= LLAV_IZQ PR_INITIAL DOS_PUNTOS ACCION:a1
             {: RESULT = new Estrategia( (String) a1, (ArrayList<Regla_If>) lista, (String) a2); :}
 ;
 
-definir_strat ::= PR_STRATEGY ID:id strat LLAV_DER
+definir_strat ::= PR_STRATEGY ID:id strat:estrate LLAV_DER 
+                {: mapaEstrategias.put((String) id, (Estrategia) estrate); :}
 ; 
+
+mutual_coop ::= PR_MUTUAL PR_COOPERATION DOS_PUNTOS ENTERO:i {: RESULT = Integer.valueOf(i); :}
+;
+
+mutual_defect ::= PR_MUTUAL  PR_DEFECTION DOS_PUNTOS ENTERO:i {: RESULT = Integer.valueOf(i); :}
+;
+
+betrayal_rew ::= PR_BETRAYAL PR_REWARD DOS_PUNTOS ENTERO:i {: RESULT = Integer.valueOf(i); :}
+;
+betrayal_punish ::= PR_BETRAYAL PR_PUNISHMENT DOS_PUNTOS ENTERO:i {: RESULT = Integer.valueOf(i); :}
+;
+
+players_strategies ::= PR_PLAYERS PR_STRATEGIES DOS_PUNTOS COR_IZQ
+;
+
+rounds ::=  PR_ROUNDS DOS_PUNTOS
+;
+
+scoring ::= PR_SCORING DOS_PUNTOS LLAV_IZQ
+;
+
+match ::= players_strategies ID:strat1 COMA ID:strat2 COR_DER rounds ENTERO:numrounds
+      scoring  mutual_coop:mc COMA mutual_defect:md COMA betrayal_rew:br COMA betrayal_punish:bp
+      LLAV_DER
+;
+
+definir_match ::= PR_MATCH ID:iden match:juego 
+;

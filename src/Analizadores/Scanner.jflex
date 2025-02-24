@@ -68,6 +68,40 @@ ACC = "D" | "C"
 "strategy" {    
     return new Symbol(sym.PR_STRATEGY,yyline,yychar,yytext());
 }
+"players" {    
+    return new Symbol(sym.PR_PLAYERS,yyline,yychar,yytext());
+}
+"strategies" {    
+    return new Symbol(sym.PR_STRATEGIES,yyline,yychar,yytext());
+}
+"rounds" {    
+    return new Symbol(sym.PR_ROUNDS,yyline,yychar,yytext());
+}
+"scoring" {    
+    return new Symbol(sym.PR_SCORING,yyline,yychar,yytext());
+}
+"mutual" {    
+    return new Symbol(sym.PR_MUTUAL,yyline,yychar,yytext());
+}
+"defection" {    
+    return new Symbol(sym.PR_DEFECTION,yyline,yychar,yytext());
+}
+"reward" {    
+    return new Symbol(sym.PR_REWARD,yyline,yychar,yytext());
+}
+"cooperation" {    
+    return new Symbol(sym.PR_COOPERATION,yyline,yychar,yytext());
+}
+"betrayal" {    
+    return new Symbol(sym.PR_BETRAYAL,yyline,yychar,yytext());
+}
+"punishment" {    
+    return new Symbol(sym.PR_PUNISHMENT,yyline,yychar,yytext());
+}
+"match" {    
+    return new Symbol(sym.PR_MATCH,yyline,yychar,yytext());
+}
+
 
 //Simbolos
 "[" {    
@@ -102,6 +136,8 @@ ACC = "D" | "C"
 ":" {
     return new Symbol(sym.DOS_PUNTOS,yyline,yychar,yytext());
 } 
+
+\n {yychar=1 ;} //en cambio de linea reinicia la columna
 
 {BLANCOS} {}
 {BOOL} {//System.out.println("Reconocio BOOL: "+yytext());  

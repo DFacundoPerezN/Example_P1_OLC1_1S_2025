@@ -5,7 +5,10 @@
         <group>
             <file>file:/C:/Users/Faxx/Documents/NetBeansProjects/EjemploP1_OLC1/src/Analizadores/Parser.cup</file>
             <file>file:/C:/Users/Faxx/Documents/NetBeansProjects/EjemploP1_OLC1/src/Generadores/Generator_Parser.java</file>
+            <file>file:/C:/Users/Faxx/Documents/NetBeansProjects/EjemploP1_OLC1/src/Analizadores/Parser.java</file>
             <file>file:/C:/Users/Faxx/Documents/NetBeansProjects/EjemploP1_OLC1/src/Analizadores/Scanner.jflex</file>
+            <file>file:/C:/Users/Faxx/Documents/NetBeansProjects/EjemploP1_OLC1/src/Estructuras/Estrategia.java</file>
+            <file>file:/C:/Users/Faxx/Documents/NetBeansProjects/EjemploP1_OLC1/src/Estructuras/Regla_If.java</file>
             <file>file:/C:/Users/Faxx/Documents/NetBeansProjects/EjemploP1_OLC1/src/ejemplop1_olc1/EjemploP1_OLC1.java</file>
         </group>
     </open-files>
