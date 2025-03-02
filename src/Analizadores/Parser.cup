@@ -57,13 +57,14 @@ entradas ::= match
         | definir_strat
 ;
 
-//todavia no es recursivo
-exp ::= exp:e1 AND exp:e2 {: System.out.println(e1 + " AND " + e2);
+exp ::= exp:e1 AND exp:e2 
+                    {: System.out.println(e1 + " AND " + e2);
                           Node and = new  Node("=="); 
                         and.hijoIzq = (Node) e1; and.hijoDer = (Node) e2; 
                         RESULT = and;:}
 
-        | exp:e1 OR exp:e2 {: System.out.println(e1 + " OR " + e2);
+        | exp:e1 OR exp:e2 
+                    {: System.out.println(e1 + " OR " + e2);
                             Node or = new  Node("||"); 
                         or.hijoIzq = (Node) e1; or.hijoDer = (Node) e2; 
                         RESULT = or;:}
