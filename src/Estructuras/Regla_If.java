@@ -17,4 +17,13 @@ public class Regla_If {
         this.condicion = c;
         this.accion = a.charAt(0);
     }
+    
+    public boolean resolveCond(Contexto actual){
+        try{
+            return (Boolean) this.condicion.getValue(actual);
+        } catch (Exception e){
+            System.out.println("Error intentando validar condicion");
+            return false;
+        }
+    }
 }

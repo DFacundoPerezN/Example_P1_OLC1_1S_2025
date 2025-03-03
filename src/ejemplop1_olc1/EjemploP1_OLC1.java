@@ -36,8 +36,35 @@ public class EjemploP1_OLC1 {
         String match = ps + "estrategia1 , estrategia2 ]"+ rs +"10" + scoring + 
                 mc +"," + md  +"," + br  +"," + bp  + "}";
         String def_match = "match juego {"+match ; 
+        String entrada = "strategy AlwaysDefect {\n" +
+        "    initial: D\n" +
+        "    rules: [\n" +
+        "        else D\n" +
+        "    ]\n" +
+        "}\n" +
+        "\n" +
+        "strategy AlwaysCooperate {\n" +
+        "    initial: C\n" +
+        "    rules: [\n" +
+        "        else C\n" +
+        "    ]\n" +
+        "}\n" +
+        "\n" +
+        "match ADefectvsACoop {\n" +
+        "    players strategies: [AlwaysDefect, AlwaysCooperate]\n" +
+        "    rounds: 100\n" +
+        "    scoring: {\n" +
+        "        mutual cooperation: 3, \n" +
+        "        mutual defection: 1, \n" +
+        "        betrayal reward: 5, \n" +
+        "        betrayal punishment: 0 \n" +
+        "    }\n" +
+        " run [ADefectvsACoop] with {\n" +
+        "        seed: 42\n" +
+        "    }"/**/
+                ;
         
-        Analizadores.Scanner lexico  = new Analizadores.Scanner(new BufferedReader( new StringReader(match)));
+        Analizadores.Scanner lexico  = new Analizadores.Scanner(new BufferedReader( new StringReader(entrada)));
         Parser sintactico =new Parser(lexico);
         
         String consola;

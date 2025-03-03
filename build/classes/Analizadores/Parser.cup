@@ -13,13 +13,17 @@ parser code
     //Clases, objetos, variables, lista, etc... en sintaxis java
     Map<String, Estrategia> mapaEstrategias = new HashMap<>();
     Map<String, Partida> mapaPartidas = new HashMap<>();
-    ;
+    void correrPartida(String partidaId, int semilla){
+        Partida partida = mapaPartidas.get(partidaId);
+        partida.jugar(semilla, mapaEstrategias.get(partida.idEstrategia1), mapaEstrategias.get(partida.idEstrategia2));
+    };
 :} 
 
 // 3. Terminales 
 terminal String AND,OR,NOT;
 terminal String PR_IF, PR_THEN;
 terminal PR_ELSE, PR_RULES, PR_INITIAL, PR_STRATEGY;
+terminal PR_RUN, PR_WITH, PR_SEED;
 terminal String COMA, DOS_PUNTOS;
 terminal LLAV_IZQ, LLAV_DER;
 terminal COR_IZQ, COR_DER;
@@ -32,14 +36,16 @@ terminal PR_SCORING, PR_MUTUAL, PR_DEFECTION, PR_REWARD, PR_COOPERATION, PR_BETR
 terminal PR_MATCH;
 
 // 4. No Terminales
-non terminal ini, entradas;
+non terminal ini, entradas, sentencia;
 non terminal exp, exp_rel;
 non terminal if, list_if;
 non terminal else;
 non terminal rules, strat, definir_strat;
 non terminal Integer mutual_coop, mutual_defect, betrayal_rew, betrayal_punish;
 non terminal players_strategies, rounds, scoring;
-non terminal match, definir_match;
+non terminal Partida match; 
+non terminal definir_match;
+non terminal run;
 
 // 5. Precedencias
 precedence left AND,OR;
@@ -53,36 +59,41 @@ start with ini;
 ini ::= entradas
 ;
 
-entradas ::= match
-        | definir_strat
+entradas ::= entradas sentencia
+            |sentencia
 ;
-
+sentencia ::= definir_match
+        | definir_strat
+        | run
+;
 //todavia no es recursivo
-exp ::= exp:e1 AND exp:e2 {: System.out.println(e1 + " AND " + e2);
-                          Node and = new  Node("=="); 
+exp ::= exp:e1 AND exp:e2 
+                        {: //System.out.println(e1 + " AND " + e2);
+                          Node and = new  Node("&&"); and.tipo = "boolean";
                         and.hijoIzq = (Node) e1; and.hijoDer = (Node) e2; 
                         RESULT = and;:}
 
-        | exp:e1 OR exp:e2 {: System.out.println(e1 + " OR " + e2);
-                            Node or = new  Node("||"); 
+        | exp:e1 OR exp:e2 
+                        {: //System.out.println(e1 + " OR " + e2);
+                            Node or = new  Node("||"); or.tipo = "boolean";
                         or.hijoIzq = (Node) e1; or.hijoDer = (Node) e2; 
                         RESULT = or;:}
 
         | NOT exp:exp
                     {: Node not = new  Node("!"); 
-                    not.hijoDer = (Node) exp; 
+                    not.hijoDer = (Node) exp; not.tipo = "boolean";
                         RESULT = not; :}
         | exp_rel:exp {: RESULT = exp; :} 
 ;
 
 exp_rel ::= exp_rel:exp1 EQUAL exp_rel:exp2 
-                    {: Node equal = new  Node("=="); 
+                    {: Node equal = new  Node("=="); equal.tipo = "boolean";
                         equal.hijoIzq = (Node) exp1; equal.hijoDer = (Node) exp2; 
                         RESULT = equal;:}
         | BOOLEANO:bool  {: System.out.println("Sintactico reconocio BOOL: "+ bool);
-                            RESULT = new Node( (String) bool); :}
-        | ENTERO:i {: RESULT = new Node( (String) i); :}
-        | ACCION:a {: RESULT = new Node( (String) a); :}
+                            Node nodo = new Node( (String) bool); nodo.tipo = "boolean"; RESULT= nodo; :}
+        | ENTERO:i {:  Node nodo = new Node( (String) i); nodo.tipo = "entero"; RESULT= nodo; :}
+        | ACCION:a {:  Node nodo = new Node( (String) a); nodo.tipo = "accion"; RESULT= nodo; :}
 ;
 //gramatica del if
 if ::= PR_IF exp:e1 PR_THEN ACCION:a  {: System.out.println(" resultado " + e1);
@@ -99,8 +110,8 @@ list_if ::= list_if:list COMA if:i   {: List<Regla_If> lista =(ArrayList<Regla_I
 else ::= PR_ELSE ACCION:a {: RESULT= a; :}
 ;
 
-rules ::= PR_RULES DOS_PUNTOS COR_IZQ list_if:list COMA {:  :}
-        | PR_RULES DOS_PUNTOS COR_IZQ  {: :}
+rules ::= PR_RULES DOS_PUNTOS COR_IZQ list_if:list COMA {: RESULT = list;  :}
+        | PR_RULES DOS_PUNTOS COR_IZQ  {: RESULT = new ArrayList<Regla_If>(); :}
 ;
 
 strat ::= LLAV_IZQ PR_INITIAL DOS_PUNTOS ACCION:a1 
@@ -134,8 +145,16 @@ scoring ::= PR_SCORING DOS_PUNTOS LLAV_IZQ
 
 match ::= players_strategies ID:strat1 COMA ID:strat2 COR_DER rounds ENTERO:numrounds
       scoring  mutual_coop:mc COMA mutual_defect:md COMA betrayal_rew:br COMA betrayal_punish:bp
-      LLAV_DER
+      LLAV_DER {:  System.out.println("Creando partida... ");
+                    Partida juego = new Partida( (String) strat1, (String) strat2, Integer.valueOf( (String) numrounds),
+                    (int) br, (int) mc, (int) md, (int) bp); juego.imprimirInfo(); 
+                     RESULT = juego; :}
 ;
 
-definir_match ::= PR_MATCH ID:iden match:juego 
+definir_match ::= PR_MATCH ID:iden LLAV_IZQ match:juego {: mapaPartidas.put((String) iden, juego); :}
 ;
+
+run ::= PR_RUN COR_IZQ ID:id COR_DER PR_WITH LLAV_IZQ PR_SEED DOS_PUNTOS ENTERO:seed LLAV_DER 
+            {: correrPartida(id, Integer.valueOf(seed)); :}
+;
+

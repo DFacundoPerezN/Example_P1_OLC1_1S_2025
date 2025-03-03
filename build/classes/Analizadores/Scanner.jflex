@@ -101,6 +101,15 @@ ACC = "D" | "C"
 "match" {    
     return new Symbol(sym.PR_MATCH,yyline,yychar,yytext());
 }
+"run" {    
+    return new Symbol(sym.PR_RUN,yyline,yychar,yytext());
+}
+"with" {    
+    return new Symbol(sym.PR_WITH,yyline,yychar,yytext());
+}
+"seed" {    
+    return new Symbol(sym.PR_SEED,yyline,yychar,yytext());
+}
 
 
 //Simbolos
