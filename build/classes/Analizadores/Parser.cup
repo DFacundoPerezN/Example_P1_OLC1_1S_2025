@@ -34,6 +34,8 @@ terminal String ID;
 terminal PR_ROUNDS, PR_PLAYERS, PR_STRATEGIES;
 terminal PR_SCORING, PR_MUTUAL, PR_DEFECTION, PR_REWARD, PR_COOPERATION, PR_BETRAYAL, PR_PUNISHMENT;
 terminal PR_MATCH;
+terminal ROUND_NUMBER, TOTAL_ROUNDS;
+terminal GET_MOVE;
 
 // 4. No Terminales
 non terminal ini, entradas, sentencia;
@@ -46,6 +48,7 @@ non terminal players_strategies, rounds, scoring;
 non terminal Partida match; 
 non terminal definir_match;
 non terminal run;
+non terminal get_moveFunc;
 
 // 5. Precedencias
 precedence left AND,OR;
@@ -93,8 +96,16 @@ exp_rel ::= exp_rel:exp1 EQUAL exp_rel:exp2
         | BOOLEANO:bool  {: System.out.println("Sintactico reconocio BOOL: "+ bool);
                             Node nodo = new Node( (String) bool); nodo.tipo = "boolean"; RESULT= nodo; :}
         | ENTERO:i {:  Node nodo = new Node( (String) i); nodo.tipo = "entero"; RESULT= nodo; :}
+        | TOTAL_ROUNDS {:  Node nodo = new Node( "total_rounds"); nodo.tipo = "entero"; RESULT= nodo; :}
+        | ROUND_NUMBER {:  Node nodo = new Node( "round_number"); nodo.tipo = "entero"; RESULT= nodo; :}
         | ACCION:a {:  Node nodo = new Node( (String) a); nodo.tipo = "accion"; RESULT= nodo; :}
+        | get_moveFunc:nodo {: RESULT= nodo; :}
 ;
+get_moveFunc ::= GET_MOVE COR_IZQ ID:i COMA exp:e COR_DER
+                        {:  Node nodo = new Node( "get_move"); nodo.tipo = "accion"; RESULT= nodo;
+                            nodo.hijoIzq = new Node ((String) i);    nodo.hijoDer = ( Node ) e; :}
+;
+
 //gramatica del if
 if ::= PR_IF exp:e1 PR_THEN ACCION:a  {: System.out.println(" resultado " + e1);
                         RESULT= new Regla_If((Node) e1, (String) a); :}
@@ -151,7 +162,7 @@ match ::= players_strategies ID:strat1 COMA ID:strat2 COR_DER rounds ENTERO:numr
                      RESULT = juego; :}
 ;
 
-definir_match ::= PR_MATCH ID:iden LLAV_IZQ match:juego {: mapaPartidas.put((String) iden, juego); :}
+definir_match ::= PR_MATCH ID:iden LLAV_IZQ match:juego{: mapaPartidas.put((String) iden, juego); :}
 ;
 
 run ::= PR_RUN COR_IZQ ID:id COR_DER PR_WITH LLAV_IZQ PR_SEED DOS_PUNTOS ENTERO:seed LLAV_DER 

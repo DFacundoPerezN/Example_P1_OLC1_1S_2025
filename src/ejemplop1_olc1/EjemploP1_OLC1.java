@@ -36,23 +36,26 @@ public class EjemploP1_OLC1 {
         String match = ps + "estrategia1 , estrategia2 ]"+ rs +"10" + scoring + 
                 mc +"," + md  +"," + br  +"," + bp  + "}";
         String def_match = "match juego {"+match ; 
-        String entrada = "strategy AlwaysDefect {\n" +
+        String entrada = "strategy Defect {\n" +
         "    initial: D\n" +
-        "    rules: [\n" +
+        "    rules : [\n" +
+        "        if round_number == 1 then C,\n" +
+        "        if total_rounds == round_number then C,\n" +
         "        else D\n" +
         "    ]\n" +
         "}\n" +
         "\n" +
-        "strategy AlwaysCooperate {\n" +
+        "strategy Cooperate {\n" +
         "    initial: C\n" +
         "    rules: [\n" +
-        "        else C\n" +
+        "        if get_move[opponent_history, round_number] == D then C,\n" +
+        "        else D\n" +
         "    ]\n" +
         "}\n" +
         "\n" +
         "match ADefectvsACoop {\n" +
-        "    players strategies: [AlwaysDefect, AlwaysCooperate]\n" +
-        "    rounds: 100\n" +
+        "    players strategies: [Defect, Cooperate]\n" +
+        "    rounds: 20\n" +
         "    scoring: {\n" +
         "        mutual cooperation: 3, \n" +
         "        mutual defection: 1, \n" +

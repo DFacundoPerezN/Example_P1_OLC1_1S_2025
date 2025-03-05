@@ -32,9 +32,12 @@ public class sym {
   public static final int EQUAL = 23;
   public static final int error = 1;
   public static final int COMA = 14;
+  public static final int TOTAL_ROUNDS = 37;
   public static final int PR_WITH = 12;
   public static final int ACCION = 22;
+  public static final int ROUND_NUMBER = 36;
   public static final int PR_COOPERATION = 32;
+  public static final int GET_MOVE = 38;
   public static final int PR_MATCH = 35;
   public static final int PR_RULES = 8;
   public static final int PR_RUN = 11;
@@ -80,7 +83,10 @@ public class sym {
   "PR_COOPERATION",
   "PR_BETRAYAL",
   "PR_PUNISHMENT",
-  "PR_MATCH"
+  "PR_MATCH",
+  "ROUND_NUMBER",
+  "TOTAL_ROUNDS",
+  "GET_MOVE"
   };
 }
 

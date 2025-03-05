@@ -51,12 +51,24 @@ public class Node {
                 case "round_number":
                     value = actual.ronda;
                     break;
+                case "total_rounds":
+                    value = actual.rondasTotales;
+                    break;
                 default:
-                value = (Object) Integer.valueOf(this.dato); 
+                    value = (Object) Integer.valueOf(this.dato); 
                 break;                   
             }
         } else if(this.dato.equals("accion")){
             switch (this.dato){
+                case "get_move":
+                    if(this.hijoIzq.dato.contains("opponent")){
+                        int index = Integer.valueOf(this.hijoDer.dato);
+                        if(actual.jugadorActual == 1){
+                            value = actual.historialJ2.get(index);
+                        } else {
+                            value = actual.historialJ1.get(index);                            
+                        }
+                    }
                 case "D":
                 case "C":
                     value = (Object) this.dato.charAt(0);

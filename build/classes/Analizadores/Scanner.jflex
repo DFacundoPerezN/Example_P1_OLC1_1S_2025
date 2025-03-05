@@ -110,6 +110,15 @@ ACC = "D" | "C"
 "seed" {    
     return new Symbol(sym.PR_SEED,yyline,yychar,yytext());
 }
+"round_number" {    
+    return new Symbol(sym.ROUND_NUMBER,yyline,yychar,yytext());
+}
+"total_rounds" {    
+    return new Symbol(sym.TOTAL_ROUNDS,yyline,yychar,yytext());
+}
+"get_move" {    
+    return new Symbol(sym.GET_MOVE,yyline,yychar,yytext());
+}
 
 
 //Simbolos
