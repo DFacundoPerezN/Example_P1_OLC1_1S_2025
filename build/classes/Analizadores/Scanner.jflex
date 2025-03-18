@@ -38,6 +38,8 @@ import java_cup.runtime.*;
 %init}
 
 //Expresiones regulares
+COMMENT_1LINE = "//" .* [^\n] \n
+COMMENT_MULTLINE = "/*" [^"*/"] "*/"
 BOOL = "true"| "false"
 NUM = [0-9]+
 DEC = [0-9]+"."[0-9]+
@@ -158,6 +160,8 @@ ACC = "D" | "C"
 \n {yychar=1 ;} //en cambio de linea reinicia la columna
 
 {BLANCOS} {}
+{COMENT1} {}
+//{COMMENTMULTI} {}
 {BOOL} {//System.out.println("Reconocio BOOL: "+yytext());  
     //lexemas.add( new Lexema(yytext(),"Boolean",yyline,yychar));
     return new Symbol(sym.BOOLEANO,yyline,yychar, yytext());
